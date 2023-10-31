@@ -46,10 +46,10 @@
     }
 
     class Pixen {
-        constructor(canvas = "body", width, height) {
+        constructor(canvas = "body", width = 400, height = 400) {
             // Default values
-            width = width || document.body.clientWidth;
-            height = height || document.body.clientHeight;
+            this.width = width;
+            this.height = height;
             
             // Get/Create the Canvas
             // If string is provided then it is used as query selector to put into
@@ -73,6 +73,12 @@
             } else {
                 this.canvas = canvas;
             }
+
+            // Change width and height of the canvas
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
+
+            // Get context 2d of the canvas
             this.ctx = this.canvas.getContext("2d");
             this._fontSize = 20;
             this._fontName = "Arial";
@@ -120,6 +126,15 @@
             }
         }
 
+        _updatePointerPos(x, y) {
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+            if (x > this.width) x = this.width;
+            if (y > this.height) y = this.height;
+            this._pointer.x = x;
+            this._pointer.y = y;
+        }
+
         _connect_signals() {
             window.addEventListener("keydown", e => {
                 this._keys[e.key] = true;
@@ -132,22 +147,19 @@
                 return true;
             });
             // TODO - make single pointer control
-            window.addEventListener("mousedown", e => {
+            this.canvas.addEventListener("mousedown", e => {
                 this.onPointerDown.emit({ x: e.clientX, y: e.clientY });
                 this._pointer.pressed = true;
-                this._pointer.x = e.clientX;
-                this._pointer.y = e.clientY;
+                this._updatePointerPos(e.clientX, e.clientY);
                 return true;
             });
-            window.addEventListener("mouseup", e => {
+            this.canvas.addEventListener("mouseup", e => {
                 this.onPointerUp.emit({ x: e.clientX, y: e.clientY });
                 this._pointer.pressed = false;
-                this._pointer.x = e.clientX;
-                this._pointer.y = e.clientY;
-                console.log(this._pointer, e);
+                this._updatePointerPos(e.clientX, e.clientY);
                 return true;
             });
-            window.addEventListener("touchstart", e => {
+            this.canvas.addEventListener("touchstart", e => {
                 let lastTouch = null;
                 for (let touch of e.changedTouches) {
                     this.onPointerDown.emit({ x: touch.clientX, y: touch.clientY });
@@ -155,11 +167,10 @@
                 }
                 if (lastTouch) {
                     this._pointer.pressed = true;
-                    this._pointer.x = lastTouch.clientX;
-                    this._pointer.y = lastTouch.clientY;
+                    this._updatePointerPos(lastTouch.clientX, lastTouch.clientY);
                 }
             });
-            window.addEventListener("touchend", e => {
+            this.canvas.addEventListener("touchend", e => {
                 let lastTouch = null;
                 for (let touch of e.changedTouches) {
                     this.onPointerUp.emit({ x: touch.clientX, y: touch.clientY });
@@ -167,15 +178,13 @@
                 }
                 if (lastTouch) {
                     this._pointer.pressed = false;
-                    this._pointer.x = lastTouch.clientX;
-                    this._pointer.y = lastTouch.clientY;
+                    this._updatePointerPos(lastTouch.clientX, lastTouch.clientY);
                 }
             });
-            window.addEventListener("mousemove", e => {
+            this.canvas.addEventListener("mousemove", e => {
                 this.onPointerMove.emit({ x: e.clientX, y: e.clientY });
-                this._pointer.x = e.clientX;
-                this._pointer.y = e.clientY;
-            })
+                this._updatePointerPos(e.clientX, e.clientY);
+            });
         }
 
         text(t, x, y) {
