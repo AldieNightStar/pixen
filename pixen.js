@@ -71,9 +71,17 @@
             this.onKeyUp = new Signal();
             this.onPointerDown = new Signal();
             this.onPointerUp = new Signal();
+            this.onPointerMove = new Signal();
 
             // Buttons
             this._keys = {};
+
+            // Pointers
+            this._pointer = {
+                pressed: false,
+                x: 0,
+                y: 0
+            }
 
             // Connect resources
             this._connect_signals();
@@ -91,6 +99,10 @@
             return this._keys[k] === true;
         }
 
+        getPointer() {
+            return this._pointer;
+        }
+
         _connect_signals() {
             window.addEventListener("keydown", e => {
                 this._keys[e.key] = true;
@@ -104,23 +116,49 @@
             });
             // TODO - make single pointer control
             window.addEventListener("mousedown", e => {
-                this.onPointerDown.emit({x: e.screenX, y: e.screenY});
+                this.onPointerDown.emit({ x: e.clientX, y: e.clientY });
+                this._pointer.pressed = true;
+                this._pointer.x = e.clientX;
+                this._pointer.y = e.clientY;
                 return true;
             });
             window.addEventListener("mouseup", e => {
-                this.onPointerUp.emit({x: e.screenX, y: e.screenY});
+                this.onPointerUp.emit({ x: e.clientX, y: e.clientY });
+                this._pointer.pressed = false;
+                this._pointer.x = e.clientX;
+                this._pointer.y = e.clientY;
+                console.log(this._pointer, e);
                 return true;
             });
             window.addEventListener("touchstart", e => {
+                let lastTouch = null;
                 for (let touch of e.changedTouches) {
-                    this.onPointerDown.emit({x: touch.clientX, y: touch.clientY});
+                    this.onPointerDown.emit({ x: touch.clientX, y: touch.clientY });
+                    lastTouch = touch;
+                }
+                if (lastTouch) {
+                    this._pointer.pressed = true;
+                    this._pointer.x = lastTouch.clientX;
+                    this._pointer.y = lastTouch.clientY;
                 }
             });
             window.addEventListener("touchend", e => {
+                let lastTouch = null;
                 for (let touch of e.changedTouches) {
-                    this.onPointerUp.emit({x: touch.clientX, y: touch.clientY});
+                    this.onPointerUp.emit({ x: touch.clientX, y: touch.clientY });
+                    lastTouch = touch;
+                }
+                if (lastTouch) {
+                    this._pointer.pressed = false;
+                    this._pointer.x = lastTouch.clientX;
+                    this._pointer.y = lastTouch.clientY;
                 }
             });
+            window.addEventListener("mousemove", e => {
+                this.onPointerMove.emit({ x: e.clientX, y: e.clientY });
+                this._pointer.x = e.clientX;
+                this._pointer.y = e.clientY;
+            })
         }
 
         text(t, x, y) {

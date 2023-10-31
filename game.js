@@ -5,6 +5,12 @@ window.addEventListener("load", function() {
         pixen.clear();
         pixen.color("red");
         pixen.rect(x, 25, 50, 50);
+
+        if (pixen.getPointer().pressed) {
+            let p = pixen.getPointer();
+            pixen.color("green");
+            pixen.rect(p.x, p.y, 10, 10);
+        }
     }, 40);
 
     pixen.onKeyDown.connect(k => {
