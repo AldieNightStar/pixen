@@ -9,15 +9,12 @@ window.addEventListener("load", function() {
             pixen.color("green");
             pixen.rect(p.x, p.y, 10, 10);
             pixen.text("@", p.x, p.y);
-        })
-    }, 40);
+        });
 
-    pixen.onKeyDown.connect(k => {
-        if (k === "a") {
+        if (pixen.isKeyPressed("a")) {
             x -= 10;
-        } else if (k === "d") {
+        } else if (pixen.isKeyPressed("d")) {
             x += 10;
         }
-        return true;
-    });
+    }, 40);
 })

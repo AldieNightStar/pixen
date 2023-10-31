@@ -160,6 +160,7 @@
                 return true;
             });
             this.canvas.addEventListener("touchstart", e => {
+                console.log(e);
                 let lastTouch = null;
                 for (let touch of e.changedTouches) {
                     this.onPointerDown.emit({ x: touch.clientX, y: touch.clientY });
