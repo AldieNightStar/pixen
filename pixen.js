@@ -1,5 +1,4 @@
 (function () {
-
     class Signal {
         constructor() {
             this.callbacks = [];
@@ -103,6 +102,12 @@
             return this._pointer;
         }
 
+        onPointer(cb) {
+            if (this._pointer.pressed) {
+                cb(this._pointer);
+            }
+        }
+
         _connect_signals() {
             window.addEventListener("keydown", e => {
                 this._keys[e.key] = true;
@@ -163,7 +168,7 @@
 
         text(t, x, y) {
             this.ctx.font = "" + this._fontSize + "px " + this._fontName;
-            this.ctx.fillText(t, x, y);
+            this.ctx.fillText(t, x, y + this._fontSize);
         }
 
         rect(x, y, w, h) {
@@ -209,7 +214,7 @@
 
         tileText(text, x, y) {
             this.fontSize(this.tileSize);
-            this.text(text, x * this.tileSize, (0.75 + y) * this.tileSize);
+            this.text(text, x * this.tileSize, y * this.tileSize);
         }
 
         realPos(x, y) { // Turns back into real cords
