@@ -50,7 +50,7 @@
             // Default values
             this.width = width;
             this.height = height;
-            
+
             // Get/Create the Canvas
             // If string is provided then it is used as query selector to put into
             if (typeof (canvas) === "string") {
@@ -64,7 +64,7 @@
                 }
                 // If element is canvas then use it
                 // If element is not a canvas then add into it
-                if (element instanceof HTMLCanvasElement ) {
+                if (element instanceof HTMLCanvasElement) {
                     this.canvas = element;
                 } else {
                     this.canvas = document.createElement("canvas");
@@ -100,8 +100,24 @@
                 y: 0
             }
 
+            // Images
+            this._images = {};
+
             // Connect resources
             this._connect_signals();
+        }
+
+        async loadImage(name, src) {
+            let img = new Image();
+            img.src = src;
+
+            this._images[name] = img;
+            return new Promise((resolve, reject) => {
+                img.addEventListener("load", () => {
+                    resolve();
+                });
+                img.addEventListener("error", reject);
+            });
         }
 
         clearSignals() {
@@ -136,6 +152,14 @@
         }
 
         _connect_signals() {
+            const bound = (x, y) => {
+                let bound = this.canvas.getBoundingClientRect();
+                return {
+                    x: x - bound.left - this.canvas.clientLeft,
+                    y: y - bound.top - this.canvas.clientTop
+                };
+            }
+
             window.addEventListener("keydown", e => {
                 this._keys[e.key] = true;
                 this.onKeyDown.emit(e.key);
@@ -148,22 +172,24 @@
             });
             // TODO - make single pointer control
             this.canvas.addEventListener("mousedown", e => {
-                this.onPointerDown.emit({ x: e.clientX, y: e.clientY });
+                let { x, y } = bound(e.clientX, e.clientY);
+                this.onPointerDown.emit({ x, y });
                 this._pointer.pressed = true;
-                this._updatePointerPos(e.clientX, e.clientY);
+                this._updatePointerPos(x, y);
                 return true;
             });
             this.canvas.addEventListener("mouseup", e => {
-                this.onPointerUp.emit({ x: e.clientX, y: e.clientY });
+                let { x, y } = bound(e.clientX, e.clientY);
+                this.onPointerDown.emit({ x, y });
                 this._pointer.pressed = false;
-                this._updatePointerPos(e.clientX, e.clientY);
+                this._updatePointerPos(x, y);
                 return true;
             });
             this.canvas.addEventListener("touchstart", e => {
-                console.log(e);
                 let lastTouch = null;
                 for (let touch of e.changedTouches) {
-                    this.onPointerDown.emit({ x: touch.clientX, y: touch.clientY });
+                    let { x, y } = bound(e.clientX, e.clientY);
+                    this.onPointerDown.emit({ x, y });
                     lastTouch = touch;
                 }
                 if (lastTouch) {
@@ -174,7 +200,8 @@
             this.canvas.addEventListener("touchend", e => {
                 let lastTouch = null;
                 for (let touch of e.changedTouches) {
-                    this.onPointerUp.emit({ x: touch.clientX, y: touch.clientY });
+                    let { x, y } = bound(e.clientX, e.clientY);
+                    this.onPointerDown.emit({ x, y });
                     lastTouch = touch;
                 }
                 if (lastTouch) {
@@ -183,8 +210,9 @@
                 }
             });
             this.canvas.addEventListener("mousemove", e => {
-                this.onPointerMove.emit({ x: e.clientX, y: e.clientY });
-                this._updatePointerPos(e.clientX, e.clientY);
+                let { x, y } = bound(e.clientX, e.clientY);
+                this.onPointerMove.emit({ x, y });
+                this._updatePointerPos(x, y);
             });
         }
 
@@ -213,7 +241,11 @@
             this._fontName = name;
         }
 
-        image(img, x, y, w, h) {
+        image(name, x, y, w, h) {
+            let img = this._images[name]
+            if (!img) {
+                throw new Error("Image \"" + name + "\" is not loaded")
+            }
             this.ctx.drawImage(img, x, y, w, h);
         }
 

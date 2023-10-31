@@ -1,13 +1,17 @@
-window.addEventListener("load", function() {
+window.addEventListener("load", async function() {
     let pixen = new Pixen("body");
     let x = 0;
+
+    await pixen.loadImage("ball1", "https://pngimg.com/uploads/football/football_PNG52781.png");
+
     this.setInterval(() => {
         pixen.clear();
         pixen.color("red");
         pixen.rect(x, 25, 50, 50);
         pixen.onPointer(p => {
             pixen.color("green");
-            pixen.rect(p.x, p.y, 10, 10);
+            // pixen.rect(p.x, p.y, 10, 10);
+            pixen.image("ball1", p.x, p.y, 25, 25);
             pixen.text("@", p.x, p.y);
         });
 
@@ -17,4 +21,6 @@ window.addEventListener("load", function() {
             x += 10;
         }
     }, 40);
+
+    pixen.onPointerDown.connect(p => { console.log(p); return true; });
 })
