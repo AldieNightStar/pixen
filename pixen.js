@@ -249,6 +249,23 @@
             this.ctx.drawImage(img, x, y, w, h);
         }
 
+        imageChunked(name, x, y, w, h, tileX, tileY, tileWidth, tileHeigh) {
+            let img = this._images[name]
+            if (!img) {
+                throw new Error("Image \"" + name + "\" is not loaded")
+            }
+            this.ctx.drawImage(img,
+                // Tile location on the image
+                tileX, tileY, tileWidth, tileHeigh,
+
+                // Tile position on the Canvas
+                x, y,
+
+                // Width and height on the Canvas
+                w, h
+            );
+        }
+
         clear() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
@@ -279,8 +296,21 @@
             }
         }
 
-        tileImage(img, x, y) {
-            this.image(img, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+        tileImage(name, x, y) {
+            this.image(name, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+        }
+
+        tileImageChunked(name, x, y, tileX, tileY, tileWidth, tileHeight) {
+            this.imageChunked(name,
+                // Position
+                x * this.tileSize, y * this.tileSize,
+
+                // Image height (Used tileSize for it)
+                this.tileSize, this.tileSize,
+
+                // Tile info
+                tileX, tileY, tileWidth, tileHeight
+            );
         }
 
         // Code to free up the resources

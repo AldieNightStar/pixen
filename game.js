@@ -12,6 +12,7 @@ window.addEventListener("load", async function() {
             pixen.color("green");
             // pixen.rect(p.x, p.y, 10, 10);
             pixen.image("ball1", p.x, p.y, 25, 25);
+            // pixen.imageChunked("ball1", p.x, p.y, 25, 25, 500, 0, 500, 1000);
             pixen.text("@", p.x, p.y);
         });
 
@@ -21,6 +22,4 @@ window.addEventListener("load", async function() {
             x += 10;
         }
     }, 40);
-
-    pixen.onPointerDown.connect(p => { console.log(p); return true; });
 })
