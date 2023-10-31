@@ -100,21 +100,16 @@
                 y: 0
             }
 
-            // Images
-            this._images = {};
-
             // Connect resources
             this._connect_signals();
         }
 
-        async loadImage(name, src) {
+        async loadImage(src) {
             let img = new Image();
             img.src = src;
-
-            this._images[name] = img;
             return new Promise((resolve, reject) => {
                 img.addEventListener("load", () => {
-                    resolve();
+                    resolve(img);
                 });
                 img.addEventListener("error", reject);
             });
@@ -241,19 +236,11 @@
             this._fontName = name;
         }
 
-        image(name, x, y, w, h) {
-            let img = this._images[name]
-            if (!img) {
-                throw new Error("Image \"" + name + "\" is not loaded")
-            }
+        image(img, x, y, w, h) {
             this.ctx.drawImage(img, x, y, w, h);
         }
 
-        imageChunked(name, x, y, w, h, tileX, tileY, tileWidth, tileHeigh) {
-            let img = this._images[name]
-            if (!img) {
-                throw new Error("Image \"" + name + "\" is not loaded")
-            }
+        imageChunked(img, x, y, w, h, tileX, tileY, tileWidth, tileHeigh) {
             this.ctx.drawImage(img,
                 // Tile location on the image
                 tileX, tileY, tileWidth, tileHeigh,
