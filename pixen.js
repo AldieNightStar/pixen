@@ -46,18 +46,30 @@
     }
 
     class Pixen {
-        constructor(canvas) {
+        constructor(canvas = "body", width, height) {
+            // Default values
+            width = width || document.body.clientWidth;
+            height = height || document.body.clientHeight;
+            
+            // Get/Create the Canvas
+            // If string is provided then it is used as query selector to put into
             if (typeof (canvas) === "string") {
-                let doc = document.querySelector(canvas);
+                let element = document.querySelector(canvas);
                 // If not found or empty array then error
-                if (!doc) throw new Error("Can't find: " + canvas);
+                if (!element) throw new Error("Can't find: " + canvas);
                 // If this is array then take first element
-                if (Array.isArray(doc)) {
-                    if (doc.length < 1) throw new Error("Can't find: " + canvas);
-                    doc = doc[0];
+                if (Array.isArray(element)) {
+                    if (element.length < 1) throw new Error("Can't find: " + canvas);
+                    element = element[0];
                 }
-                this.canvas = document.createElement("canvas");
-                doc.appendChild(this.canvas);
+                // If element is canvas then use it
+                // If element is not a canvas then add into it
+                if (element instanceof HTMLCanvasElement ) {
+                    this.canvas = element;
+                } else {
+                    this.canvas = document.createElement("canvas");
+                    element.appendChild(this.canvas);
+                }
             } else {
                 this.canvas = canvas;
             }
