@@ -143,6 +143,10 @@
             return new Sprite(img, x, y, w, h);
         }
 
+        isSprite(img) {
+            return img instanceof Sprite;
+        }
+
         // Turn image into some tileset. Returns array of tiles
         spriteMap(img, countX, countY, tileWidth, tileHeight) {
             let sprites = [];
