@@ -16,7 +16,11 @@ let img1 = await p.loadImage();
 
 
 ## Load sprite from Images
-* To create sprites you need to have loaded image
+* To create sprites you need to `p.loadImage`
+```js
+// Load image from file "tiles.png"
+let img1 = await p.loadImage("tiles.png");
+```
 * After image get loaded then we could chunk it and take sprites of it
 * These `Sprite`'s could be used in functions like `sprite` and `tiledSprite`
 ```js
