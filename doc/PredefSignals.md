@@ -21,6 +21,6 @@ p.onKeyDown.connect(k => {
   console.log("Key " + k + " is pressed");
 
   // Do not disconnect
-  return true
+  return true;
 }
 ```
