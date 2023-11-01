@@ -83,6 +83,9 @@
             } else {
                 this.canvas = canvas;
             }
+            
+            // Tile size
+            this.tileSize = 32;
 
             // Change width and height of the canvas
             this.canvas.width = this.width;
@@ -310,7 +313,7 @@
             this._fontName = name;
         }
 
-        image(img, x, y, w, h) {
+        sprite(img, x, y, w, h) {
             // If this image is a sprite then draw a chunk of it
             if (img instanceof Sprite) {
                 this.ctx.drawImage(img.img,
@@ -355,7 +358,7 @@
             }
         }
 
-        tileImage(img, x, y) {
+        tileSprite(img, x, y) {
             this.image(img, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
         }
 

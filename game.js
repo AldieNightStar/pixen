@@ -12,7 +12,7 @@ window.addEventListener("load", async function() {
         pixen.onPointer(p => {
             // pixen.color("green");
             // pixen.rect(p.x, p.y, 10, 10);
-            pixen.image(tiles[p.x % tiles.length], p.x, p.y, 50, 50);
+            pixen.sprite(tiles[p.x % tiles.length], p.x, p.y, 50, 50);
             // pixen.text("@", p.x, p.y);
         });
 
