@@ -20,6 +20,8 @@ window.addEventListener("load", async function() {
             x -= 10;
         } else if (pixen.isKeyPressed("d")) {
             x += 10;
+        } else if (pixen.isKeyPressed("w")) {
+            console.log(pixen.gamepad);
         }
     }, 40);
 })

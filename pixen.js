@@ -104,6 +104,15 @@
             // Buttons
             this._keys = {};
 
+            // Gamepad
+            // this._gamepad.index
+            // this._gamepad.id
+            // this._gamepad.buttons.length
+            // this._gamepad.buttons[0].pressed
+            // this._gamepad.buttons[0].value
+            // this._gamepad.axes.length
+            this._gamepad = null;
+
             // Pointers
             this._pointer = {
                 pressed: false,
@@ -140,6 +149,38 @@
                 }
             }
             return sprites;
+        }
+
+        gamepadInfo() {
+            if (!this._gamepad) return null;
+            return {
+                id: this._gamepad.id,
+                buttons: this._gamepad.buttons.length,
+                axes: this._gamepad.axes.length,
+                mapping: this._gamepad.mapping,
+            }
+        }
+
+        gamepadButton(buttonId) {
+            if (!this._gamepad) return 0;
+            const buttons = this._gamepad.buttons;
+            if (buttonId < 0 || buttonId >= buttons.length) {
+                return 0;
+            }
+            let button = buttons[buttonId];
+            if (!button.pressed) {
+                return 0;
+            }
+            return button.value;
+        }
+
+        gamepadAxe(axeId) {
+            if (!this._gamepad) return 0
+            const axes = this._gamepad.axes;
+            if (axeId < 0 || axeId >= axes.length) {
+                return 0;
+            }
+            return axes[axeId];
         }
 
         clearSignals() {
@@ -235,6 +276,12 @@
                 let { x, y } = bound(e.clientX, e.clientY);
                 this.onPointerMove.emit({ x, y });
                 this._updatePointerPos(x, y);
+            });
+            window.addEventListener("gamepadconnected", (e) => {
+                this._gamepad = e.gamepad;
+            });
+            window.addEventListener("gamepaddisconnected", (e) => {
+                this._gamepad = e.gamepad;
             });
         }
 
