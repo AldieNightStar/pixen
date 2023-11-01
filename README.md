@@ -2,6 +2,10 @@
 
 <image src="logo.png" width="100%">
 
+# Why?
+* Engine created from `Monna Histea Engine` and will be used inside the Novels and not only
+* Allows you to write simple ready-to-go pixel games
+
 ## Install
 TO BE DONE
 
