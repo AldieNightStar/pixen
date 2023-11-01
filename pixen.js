@@ -90,6 +90,7 @@
 
             // Get context 2d of the canvas
             this.ctx = this.canvas.getContext("2d");
+            this.ctx.imageSmoothingEnabled = false; // Do not allow images to blur
             this._fontSize = 20;
             this._fontName = "Arial";
 
@@ -125,8 +126,20 @@
             });
         }
 
+        // Handy sprite set from image
         spriteOf(img, x, y, w, h) {
             return new Sprite(img, x, y, w, h);
+        }
+
+        // Turn image into some tileset. Returns array of tiles
+        spriteMap(img, countX, countY, tileWidth, tileHeight) {
+            let sprites = [];
+            for (let y = 0; y < countY; y++) {
+                for (let x = 0; x < countX; x++) {
+                    sprites.push(new Sprite(img, x * tileWidth, y * tileHeight, tileWidth, tileHeight))
+                }
+            }
+            return sprites;
         }
 
         clearSignals() {
