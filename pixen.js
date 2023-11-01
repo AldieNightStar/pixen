@@ -45,6 +45,16 @@
         }
     }
 
+    class Sprite {
+        constructor(img, x, y, w, h) {
+            this.img = img;
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+        }
+    }
+
     class Pixen {
         constructor(canvas = "body", width = 400, height = 400) {
             // Default values
@@ -113,6 +123,10 @@
                 });
                 img.addEventListener("error", reject);
             });
+        }
+
+        spriteOf(img, x, y, w, h) {
+            return new Sprite(img, x, y, w, h);
         }
 
         clearSignals() {
@@ -237,20 +251,18 @@
         }
 
         image(img, x, y, w, h) {
+            // If this image is a sprite then draw a chunk of it
+            if (img instanceof Sprite) {
+                this.ctx.drawImage(img.img,
+                    // Tile location on the image
+                    img.x, img.y, img.w, img.h,
+    
+                    // Tile position/size on the Canvas
+                    x, y, w, h
+                );
+                return;
+            }
             this.ctx.drawImage(img, x, y, w, h);
-        }
-
-        imageChunked(img, x, y, w, h, tileX, tileY, tileWidth, tileHeigh) {
-            this.ctx.drawImage(img,
-                // Tile location on the image
-                tileX, tileY, tileWidth, tileHeigh,
-
-                // Tile position on the Canvas
-                x, y,
-
-                // Width and height on the Canvas
-                w, h
-            );
         }
 
         clear() {
@@ -283,21 +295,8 @@
             }
         }
 
-        tileImage(name, x, y) {
-            this.image(name, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
-        }
-
-        tileImageChunked(name, x, y, tileX, tileY, tileWidth, tileHeight) {
-            this.imageChunked(name,
-                // Position
-                x * this.tileSize, y * this.tileSize,
-
-                // Image height (Used tileSize for it)
-                this.tileSize, this.tileSize,
-
-                // Tile info
-                tileX, tileY, tileWidth, tileHeight
-            );
+        tileImage(img, x, y) {
+            this.image(img, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
         }
 
         // Code to free up the resources

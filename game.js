@@ -2,7 +2,8 @@ window.addEventListener("load", async function() {
     let pixen = new Pixen("body");
     let x = 0;
 
-    let ball = await pixen.loadImage("https://pngimg.com/uploads/football/football_PNG52781.png");
+    let tileset = await pixen.loadImage("tileset.png");
+    let tile1 = pixen.spriteOf(tileset, 0, 32 * 12, 32, 32);
 
     this.setInterval(() => {
         pixen.clear();
@@ -11,9 +12,8 @@ window.addEventListener("load", async function() {
         pixen.onPointer(p => {
             pixen.color("green");
             // pixen.rect(p.x, p.y, 10, 10);
-            pixen.image(ball, p.x, p.y, 25, 25);
-            // pixen.imageChunked(ball, p.x, p.y, 25, 25, 500, 0, 500, 1000);
-            pixen.text("@", p.x, p.y);
+            pixen.image(tile1, p.x, p.y, 32, 32);
+            // pixen.text("@", p.x, p.y);
         });
 
         if (pixen.isKeyPressed("a")) {
