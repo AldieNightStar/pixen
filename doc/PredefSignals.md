@@ -1,4 +1,4 @@
-# Predefined Signal
+# Predefined Signals
 
 ## Notes
 * Used in the game engine as standard ones
