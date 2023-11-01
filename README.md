@@ -1,5 +1,7 @@
 # Monna Histea Pixen
 
+<image src="logo.png" width="100%">
+
 ## Install
 TO BE DONE
 
