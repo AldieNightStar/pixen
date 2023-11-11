@@ -363,7 +363,7 @@
         }
 
         tileSprite(img, x, y) {
-            this.image(img, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+            this.sprite(img, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
         }
 
         // Code to free up the resources
